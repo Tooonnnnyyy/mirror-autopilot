@@ -1,6 +1,6 @@
 # AGENTS.md — mirror-autopilot
 
-Closed-loop autonomous iPhone Mirroring control. Read DESIGN.md before touching code.
+Closed-loop autonomous iPhone Mirroring control. Read CONTEXT.md (current state + pending) then DESIGN.md before touching code.
 
 Hard rules:
 - The ONLY irreversible action is the 立即沟通 click: it must stay behind the policy gate

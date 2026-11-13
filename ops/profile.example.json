@@ -1,0 +1,11 @@
+{
+  "skills": ["Python", "SQL", "Figma", "数据分析", "用户研究", "AI", "Prompt"],
+  "experience": "研一，数字化转型；本科商业组织管理+消费者行为研究",
+  "education": "uOttawa 研一",
+  "target_roles": ["产品", "用户研究", "用户体验", "AI产品"],
+  "target_keywords": ["产品", "用户研究", "用户体验", "实习"],
+  "must_words": ["实习"],
+  "boost_words": ["AI", "Agent", "大模型"],
+  "threshold": 60,
+  "max_daily_contacts": 3
+}

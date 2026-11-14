@@ -12,12 +12,11 @@ No account, no cookie, no key.
 
 from __future__ import annotations
 
-from typing import Any
 from urllib.parse import urlencode
 
 from ..schema import Opportunity, iso_local, parse_time, now_local
 from ..dedupe import make_id
-from .base import Http, SourceBlocked
+from .base import Http
 
 CALENDAR_API = "https://api.lu.ma/calendar/get-items"
 CALENDAR_ID = "cal-lGggwyc7FbxEg7T"  # Ottawa AI and Tech Community (sources.md #1)
@@ -28,32 +27,41 @@ CALENDAR_HEADERS = {"Origin": "https://luma.com", "Referer": "https://luma.com/o
 DISCOVER_HEADERS = {"Origin": "https://luma.com", "Referer": "https://luma.com/discover"}
 
 
+APPROVAL_MARK = '"require_approval":true'
+
+
+def approval_required(body: str) -> bool:
+    """Luma marks an approval-gated event in its page payload (NEXA Connect does this)."""
+    return APPROVAL_MARK in body.replace(" ", "")
+
+
 class Luma:
+    """The community calendar itself (sources.md #1). Currently 0 future events — that is real."""
+
     id = "luma"
 
     def fetch(self, http: Http, limit: int) -> list[Opportunity]:
-        rows: list[Opportunity] = []
-        rows.extend(self._calendar(http, limit))
-        if len(rows) < limit:
-            try:
-                rows.extend(self._discover(http, limit - len(rows)))
-            except SourceBlocked:
-                if not rows:
-                    raise
-        return rows[:limit]
-
-    def _calendar(self, http: Http, limit: int) -> list[Opportunity]:
         query = urlencode({"calendar_api_id": CALENDAR_ID, "period": "future", "pagination_limit": limit})
         body = http.get(f"{CALENDAR_API}?{query}", self.id, headers=CALENDAR_HEADERS)
-        return parse(body, calendar_only=True)
+        return parse(body, source=self.id, calendar_only=True)
 
-    def _discover(self, http: Http, limit: int) -> list[Opportunity]:
+
+class LumaDiscover:
+    """Luma's own city search (non-official endpoint, CTO to sign off).
+
+    Kept as its own adapter with its own id so that if the endpoint is ever withdrawn, only this
+    source can be switched off without touching the calendar adapter above.
+    """
+
+    id = "luma_discover"
+
+    def fetch(self, http: Http, limit: int) -> list[Opportunity]:
         query = urlencode({"query": "ottawa", "pagination_limit": max(1, min(limit, 50))})
         body = http.get(f"{DISCOVER_API}?{query}", self.id, headers=DISCOVER_HEADERS)
-        return parse(body, calendar_only=False)
+        return parse(body, source=self.id, calendar_only=False)
 
 
-def parse(body: str, calendar_only: bool = False) -> list[Opportunity]:
+def parse(body: str, source: str = "luma", calendar_only: bool = False) -> list[Opportunity]:
     """Pure parser on the API's JSON, so tests never touch the network."""
     import json
 
@@ -79,7 +87,7 @@ def parse(body: str, calendar_only: bool = False) -> list[Opportunity]:
         venue = (event.get("geo_address_info") or {}).get("short_address") or ""
         out.append(
             Opportunity(
-                id=make_id("luma", url, title),
+                id=make_id(source, url, title),
                 type="event",
                 title=title,
                 org=(calendar.get("name") or "").strip(),
@@ -87,7 +95,7 @@ def parse(body: str, calendar_only: bool = False) -> list[Opportunity]:
                 city=city or "Ottawa",
                 date=iso_local(event.get("start_at")),
                 deadline=None,
-                source="luma",
+                source=source,
                 raw_text=f"{venue}".strip(),
                 signals={
                     "free": ticket.get("is_free"),
@@ -100,6 +108,3 @@ def parse(body: str, calendar_only: bool = False) -> list[Opportunity]:
         )
     return out
 
-
-def _unused(_: Any) -> None:  # keep the import list honest for type checkers
-    return None

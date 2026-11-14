@@ -31,6 +31,8 @@ rows printed for checking, never part of the Top list), `--sources`, `--profile`
   can check the ranking instead of trusting it.
 - `shortfall: X/N` when fewer than 7 of the Top rows are tech/career/builder. It says so instead of
   padding the list.
+- `⚠ 需主办方审批` on a row whose event page needs the organizer's approval (Luma marks it
+  `require_approval`); the check runs on the Top rows only, one small request each.
 
 ## The three layers (spec §4)
 
@@ -80,7 +82,10 @@ ignored by hand) is permanent; the other two are recomputed on every run.
 | Adapter | What it reads | Measured |
 | --- | --- | --- |
 | `eventbrite` | `eventbrite.ca/d/canada--ottawa/events/` — one schema.org ItemList in JSON-LD | 30 rows after the per-source cap (68 on the page) |
-| `luma` | the community calendar `api.lu.ma/calendar/get-items` **and** the public discovery search `api.luma.com/discover/get-paginated-events?query=ottawa` | 25 rows; the calendar alone has 0 future events |
+| `luma` | the community calendar `api.lu.ma/calendar/get-items` | 0 rows (the community calendar has no future events — that is the real answer) |
+| `luma_discover` | Luma's own city search `api.luma.com/discover/get-paginated-events?query=ottawa` (non-official endpoint, kept as its own adapter so it can be switched off alone) | 25 rows |
+| `invest_ottawa` | `investottawa.ca/events/` — server-rendered month calendar, `data-datetime` on each entry | 25 rows after the cap |
+| `kanata_north` | `kanatanorth.ca/events-consultations/` — parsed for dated entries; the page currently publishes none, so it returns 0 rows and never invents any | 0 rows today |
 | `clubs_uottawa` | `uottawa.ca/en/events-all?_wrapper_format=drupal_ajax` — Drupal AJAX JSON (sometimes wrapped in `<textarea>`) | 19 rows over 2 pages |
 | `clubs_carleton` | `events.carleton.ca` — server-rendered cards with month/day badges | 3 rows (the page carries only the next few) |
 | `meetup` | `meetup.com/find/?location=ca--Ottawa&source=EVENTS` — JSON-LD, no headless needed | 12 rows |
@@ -100,6 +105,18 @@ in `tests/fixtures/`.
 - 401/403/429/451 stop that source for the day (`source_error` in the audit log); three errors in a
   row or a >30 % error rate stop it too. No retry loops, no workarounds.
 - The UA names the project and a contact; the scraped text stays in `data/` on this machine.
+
+## Known limitations
+
+- **A score built mostly from defaults is mostly noise.** When a source publishes no organizer, no
+  price and no registration state (Eventbrite's JSON-LD does not), the scorer falls back to
+  `organizer_other` / `cost_unknown` / `rsvp_unknown`. A row like "Ottawa Design Club" scores 53 with
+  20 points of evidence and 33 points of fallback, so it sits below the 60 line — correct for v1
+  (sparse pages rank last) but **not comparable with a 76 that was earned from real fields**. v1
+  deliberately does not adjust the weights for this; extraction is the fix, not tuning.
+- Luma's city search is an unofficial endpoint; if it is withdrawn only `luma_discover` goes away.
+- Kanata North's page has no dated list today; the adapter exists and returns nothing rather than
+  guessing.
 - Red-line violations exit 1 and produce no digest (`radar/redline.py`).
 
 ## State (only without `--dry-run`)

@@ -114,6 +114,7 @@ def render_markdown(rows: list[Opportunity], *, city: str, total: int, sources: 
             lines.append(
                 f"- **{row.title}** · {row.org or '主办未标明'} · {_when(row)} · {row.score} 分 · "
                 f"{level_of(row)} · [{row.source}]({row.url})"
+                + (" · ⚠ 需主办方审批" if row.signals.get("approval_required") else "")
             )
             lines.append(f"  - {'；'.join(row.reasons[:3])}")
             lines.append(f"  - 证据: {_why(row)}")
@@ -139,7 +140,8 @@ def render_console(rows: list[Opportunity], *, city: str, total: int, sources: d
         return "\n".join(out)
     for index, row in enumerate(rows, 1):
         out.append(f"{index:>2}. {row.score:3d} 分 · {CATEGORY.get(row.type, row.type)} · {_when(row)} · {row.title}")
-        out.append(f"    {row.org or '主办未标明'} · {row.source} · {row.url}")
+        badge = " · ⚠ 需主办方审批" if row.signals.get("approval_required") else ""
+        out.append(f"    {row.org or '主办未标明'} · {row.source} · {row.url}{badge}")
         out.append(f"    {row.reasons[0]} · {row.reasons[1]} · {row.reasons[2]}")
         out.append(f"    证据: {_why(row)}")
 

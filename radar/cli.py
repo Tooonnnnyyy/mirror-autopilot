@@ -18,7 +18,7 @@ from typing import Any
 from . import digest, gate, redline, scoring, store
 from .dedupe import dedupe
 from .schema import Opportunity, TORONTO
-from .sources import ADAPTERS
+from .sources import ADAPTERS, luma as luma_source
 from .sources.base import Http, SourceBlocked
 
 PROFILE_PATH = Path(__file__).with_name("profile.json")
@@ -44,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--sources", default="", help=f"comma separated subset of: {', '.join(ADAPTERS)}")
     parser.add_argument("--profile", default=str(PROFILE_PATH), help="path to profile.json")
     parser.add_argument("--show-more", type=int, default=5, help="extra gate-passed rows shown for checking (default 5)")
+    parser.add_argument("--no-approval-check", action="store_true", help="skip the per-event approval check on the Top rows")
     parser.add_argument("--json", action="store_true", help="print the selected rows as JSON")
     parser.add_argument("--allow-night", action="store_true", help="run inside the quiet hours (testing only)")
     parser.add_argument("--verbose", "-v", action="store_true", help="show each source and each block")
@@ -113,6 +114,17 @@ def run(args: argparse.Namespace) -> int:
     blocked = sum(1 for row in rows if not row.gate.passed)
     top = digest.select_top(rows, threshold, store.excluded_ids(state), limit=args.top)
     passed = sum(1 for row in rows if row.gate.passed)
+
+    # An approval-gated event looks identical to an open one in the list payload; the event page
+    # carries the flag. Only the Top rows are checked, so this costs at most ~10 requests.
+    if not args.no_approval_check:
+        for row in top:
+            if row.source not in ("luma", "luma_discover") or not row.url:
+                continue
+            try:
+                row.signals["approval_required"] = luma_source.approval_required(http.get(row.url, row.source))
+            except (SourceBlocked, redline.RedLineError):
+                continue
 
     # The next few gate-passed rows, for the reader to check; they are never part of the Top list.
     picked = {row.id for row in top}

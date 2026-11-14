@@ -412,6 +412,18 @@
     "clubs_carleton": {
       "enabled": true,
       "max_items": 25
+    },
+    "luma_discover": {
+      "enabled": true,
+      "max_items": 40
+    },
+    "invest_ottawa": {
+      "enabled": true,
+      "max_items": 25
+    },
+    "kanata_north": {
+      "enabled": true,
+      "max_items": 25
     }
   },
   "relevance_keywords": {

@@ -47,16 +47,23 @@ def classify(op: Opportunity, profile: dict) -> tuple[str, str, str]:
     # A strong word in the organizer's name is not evidence about the event itself: "National
     # Social Networking Group" runs mixers, not networking for builders. It can only lift a row to
     # mid, never to high.
+    title = op.title
     high = _hits(text, rules.get("high") or [])
     org_high = _hits(op.org or "", rules.get("high") or [])
     mid = _hits(text, rules.get("mid") or [])
     low = _hits(text, rules.get("low") or [])
+    # When a word appears in both, the title is the better evidence to quote back to Tony.
+    def first(word_list: list[str]) -> str:
+        in_title = _hits(title, word_list)
+        return in_title[0] if in_title else word_list[0]
+
     if high:
-        return "high", high[0], bucket_of(high[0], profile)
+        return "high", first(high), bucket_of(first(high), profile)
     if low:
-        return "low", low[0], bucket_of(low[0], profile)
+        word = first(low)
+        return "low", word, bucket_of(word, profile)
     if mid:
-        return "mid", mid[0], bucket_of(mid[0], profile)
+        return "mid", first(mid), bucket_of(first(mid), profile)
     if org_high:
         return "mid", f"organizer: {org_high[0]}", bucket_of(org_high[0], profile)
     return "mid", "", bucket_of("", profile)

@@ -1,0 +1,596 @@
+{
+  "version": 1,
+  "owner": "Tony",
+  "city": "Ottawa",
+  "allowed_cities": [
+    "ottawa",
+    "online",
+    "remote",
+    "virtual"
+  ],
+  "threshold": 60,
+  "max_days_ahead": 45,
+  "seen_days": 90,
+  "limits": {
+    "per_source_items": 40,
+    "per_day_requests": 120,
+    "min_delay_seconds": 3,
+    "max_delay_seconds": 8,
+    "quiet_hours": [
+      0,
+      7
+    ],
+    "stop_after_consecutive_errors": 3,
+    "stop_after_error_rate": 0.3
+  },
+  "gate": {
+    "event": {
+      "allowed_cities": [
+        "ottawa",
+        "online",
+        "remote",
+        "virtual"
+      ],
+      "max_days_ahead": 45,
+      "invite_words": [
+        "invite only",
+        "invitation only",
+        "members only",
+        "internal event",
+        "private event",
+        "by application only"
+      ]
+    },
+    "job": {
+      "allowed_cities": [
+        "ottawa",
+        "online",
+        "remote",
+        "toronto"
+      ],
+      "relocate_words": [
+        "relocation to the united states required",
+        "must relocate to the us",
+        "onsite in san francisco",
+        "based in new york"
+      ],
+      "identity_words": [
+        "canadian citizen",
+        "canadian citizenship",
+        "permanent resident required",
+        "must be a pr",
+        "security clearance required",
+        "top secret clearance"
+      ],
+      "sponsorship_words": [
+        "sponsorship",
+        "work permit",
+        "visa support",
+        "we sponsor"
+      ],
+      "language_words": [
+        "french is required",
+        "fluent in french",
+        "bilingual imperative",
+        "bilingual mandatory",
+        "français obligatoire",
+        "bilinguisme"
+      ],
+      "degree_words": [
+        "phd required",
+        "ph.d. required",
+        "doctorate required",
+        "high school diploma only",
+        "no degree required but",
+        "must hold a phd"
+      ]
+    }
+  },
+  "scoring": {
+    "event": {
+      "topic_max": 40,
+      "topic_words": [
+        "ai",
+        "artificial intelligence",
+        "agent",
+        "llm",
+        "machine learning",
+        "ml",
+        "data",
+        "software",
+        "developer",
+        "engineering",
+        "product",
+        "design",
+        "ux",
+        "startup",
+        "founder",
+        "entrepreneur",
+        "entrepreneurship",
+        "hackathon",
+        "build",
+        "builder",
+        "builders",
+        "open source",
+        "robotics",
+        "cloud",
+        "security",
+        "cyber",
+        "analytics",
+        "automation",
+        "networking",
+        "demo",
+        "career fair",
+        "internship",
+        "co-op",
+        "pitch",
+        "venture",
+        "incubator",
+        "tech",
+        "technology"
+      ],
+      "organizer_max": 15,
+      "known_orgs": [
+        "ottawa tech",
+        "civic tech",
+        "minimum viable",
+        "invest ottawa",
+        "startup garage",
+        "ottawa network",
+        "tech thursday",
+        "tech wednesdays",
+        "nexa",
+        "informs",
+        "canadian tech",
+        "hackathon"
+      ],
+      "format_max": 10,
+      "format_words": [
+        "networking",
+        "hands-on",
+        "workshop",
+        "demo",
+        "build",
+        "showcase",
+        "hack",
+        "social",
+        "mixer",
+        "projects night",
+        "night",
+        "meetup",
+        "talk",
+        "session",
+        "info session",
+        "panel"
+      ],
+      "campus_words": [
+        "uottawa",
+        "carleton",
+        "student",
+        "campus",
+        "university",
+        "co-op",
+        "coop",
+        "society",
+        "club"
+      ],
+      "campus_points": 10,
+      "free_points": 10,
+      "rsvp_points": 15,
+      "topic_points": [
+        0,
+        20,
+        30,
+        40
+      ],
+      "organizer_other": 10,
+      "format_default": 6,
+      "cost_unknown": 7,
+      "rsvp_unknown": 10
+    },
+    "club": {
+      "topic_max": 25,
+      "topic_words": [
+        "ai",
+        "tech",
+        "product",
+        "startup",
+        "founder",
+        "engineering",
+        "developer",
+        "design",
+        "data",
+        "hackathon",
+        "build"
+      ],
+      "activity_max": 20,
+      "active_words": [
+        "weekly",
+        "monthly",
+        "every week",
+        "every month",
+        "regular",
+        "meets"
+      ],
+      "recruiting_max": 20,
+      "recruiting_words": [
+        "join us",
+        "join now",
+        "recruiting",
+        "open to new",
+        "new members",
+        "sign up",
+        "apply"
+      ],
+      "offline_max": 15,
+      "offline_cities": [
+        "Ottawa"
+      ],
+      "cheap_points": 10,
+      "topic_points": [
+        0,
+        15,
+        20,
+        25
+      ]
+    },
+    "hackathon": {
+      "topic_max": 30,
+      "topic_words": [
+        "ai",
+        "agent",
+        "llm",
+        "machine learning",
+        "data",
+        "climate",
+        "health",
+        "startup",
+        "product",
+        "hackathon",
+        "build"
+      ],
+      "skills_max": 20,
+      "skill_words": [
+        "python",
+        "javascript",
+        "typescript",
+        "react",
+        "next.js",
+        "api",
+        "sql",
+        "ml",
+        "llm",
+        "design",
+        "figma",
+        "data",
+        "automation"
+      ],
+      "short_words": [
+        "24 hour",
+        "24-hour",
+        "48 hour",
+        "48-hour",
+        "weekend",
+        "one day",
+        "1 day"
+      ],
+      "short_points": 15,
+      "team_words": [
+        "team",
+        "solo",
+        "form a team",
+        "teammates",
+        "team up"
+      ],
+      "team_points": 15,
+      "award_words": [
+        "prize",
+        "award",
+        "cash",
+        "incubator",
+        "mentorship",
+        "demo day",
+        "$"
+      ],
+      "award_points": 10,
+      "deadline_points": 10,
+      "topic_points": [
+        0,
+        18,
+        24,
+        30
+      ]
+    },
+    "collab": {
+      "topic_max": 40,
+      "topic_words": [
+        "ai",
+        "agent",
+        "llm",
+        "startup",
+        "product",
+        "engineering",
+        "developer",
+        "automation",
+        "open source",
+        "design",
+        "builder"
+      ],
+      "credibility_max": 20,
+      "short_words": [
+        "2 weeks",
+        "two weeks",
+        "one week",
+        "1 week",
+        "quick",
+        "sprint"
+      ],
+      "effort_points": 15,
+      "how_words": [
+        "co-founder",
+        "cofounder",
+        "partner",
+        "collaborate",
+        "collaboration",
+        "revenue share",
+        "equity",
+        "contract",
+        "freelance"
+      ],
+      "how_points": 15,
+      "budget_words": [
+        "paid",
+        "budget",
+        "stipend",
+        "equity",
+        "revenue share",
+        "$"
+      ],
+      "budget_points": 10,
+      "topic_points": [
+        0,
+        22,
+        32,
+        40
+      ]
+    }
+  },
+  "job": {
+    "skills": [
+      "python",
+      "sql",
+      "excel",
+      "machine learning",
+      "llm",
+      "product",
+      "data",
+      "automation",
+      "ai agent",
+      "figma",
+      "typescript",
+      "react"
+    ],
+    "target_roles": [
+      "产品",
+      "product",
+      "ai",
+      "agent",
+      "数据",
+      "data",
+      "实习",
+      "intern"
+    ],
+    "must_words": [
+      "实习",
+      "intern"
+    ],
+    "boost_words": [
+      "ai",
+      "agent",
+      "产品",
+      "remote",
+      "hybrid"
+    ]
+  },
+  "sources": {
+    "luma": {
+      "enabled": true,
+      "max_items": 40
+    },
+    "eventbrite": {
+      "enabled": true,
+      "max_items": 30
+    },
+    "meetup": {
+      "enabled": true,
+      "max_items": 30
+    },
+    "clubs_uottawa": {
+      "enabled": true,
+      "max_items": 25
+    },
+    "clubs_carleton": {
+      "enabled": true,
+      "max_items": 25
+    }
+  },
+  "relevance_keywords": {
+    "high": [
+      "internship",
+      "intern",
+      "co-op",
+      "coop",
+      "new grad",
+      "career fair",
+      "hiring",
+      "hackathon",
+      "startup",
+      "founder",
+      "co-founder",
+      "ai",
+      "artificial intelligence",
+      "machine learning",
+      "llm",
+      "agent",
+      "data",
+      "software",
+      "developer",
+      "engineering",
+      "design",
+      "ux",
+      "product",
+      "networking",
+      "tech talk",
+      "demo day",
+      "demo",
+      "build",
+      "builder",
+      "builders",
+      "open source",
+      "robotics",
+      "cybersecurity",
+      "cyber",
+      "cloud",
+      "analytics",
+      "automation",
+      "coding",
+      "programming",
+      "tech",
+      "technology",
+      "venture",
+      "incubator",
+      "pitch"
+    ],
+    "mid": [
+      "workshop",
+      "mentorship",
+      "mentor",
+      "student club",
+      "club",
+      "volunteer",
+      "competition",
+      "summit",
+      "conference",
+      "panel",
+      "meetup",
+      "community",
+      "career",
+      "resume",
+      "cv",
+      "entrepreneurship",
+      "accelerator",
+      "research",
+      "seminar",
+      "course",
+      "training",
+      "innovation"
+    ],
+    "low": [
+      "concert",
+      "party",
+      "singles",
+      "dating",
+      "dance",
+      "zumba",
+      "food",
+      "soup",
+      "cake",
+      "choir",
+      "church",
+      "wellness",
+      "yoga",
+      "meditation",
+      "festival",
+      "music",
+      "karaoke",
+      "trivia",
+      "brunch",
+      "cooking",
+      "wine",
+      "beer",
+      "tasting",
+      "bazaar",
+      "vaccine",
+      "vaccination",
+      "flu",
+      "blood donation",
+      "prayer",
+      "social mixer",
+      "mixer",
+      "board game",
+      "movie",
+      "film screening",
+      "comedy",
+      "theatre",
+      "theater",
+      "art exhibition",
+      "poetry"
+    ]
+  },
+  "buckets": {
+    "career": [
+      "internship",
+      "intern",
+      "co-op",
+      "coop",
+      "new grad",
+      "career fair",
+      "hiring",
+      "job",
+      "resume",
+      "mentorship",
+      "mentor",
+      "recruiting",
+      "recruitment",
+      "career"
+    ],
+    "builder": [
+      "startup",
+      "founder",
+      "co-founder",
+      "hackathon",
+      "product",
+      "build",
+      "builder",
+      "builders",
+      "demo day",
+      "pitch",
+      "venture",
+      "incubator",
+      "open source",
+      "hack night",
+      "makeathon",
+      "entrepreneurship"
+    ],
+    "tech": [
+      "ai",
+      "artificial intelligence",
+      "machine learning",
+      "ml",
+      "llm",
+      "agent",
+      "data",
+      "software",
+      "developer",
+      "engineering",
+      "design",
+      "ux",
+      "cloud",
+      "security",
+      "cyber",
+      "robotics",
+      "analytics",
+      "automation",
+      "tech",
+      "technology",
+      "coding",
+      "programming",
+      "networking",
+      "innovation"
+    ]
+  },
+  "relevance_caps": {
+    "mid_score_factor": 0.5,
+    "low": 0
+  }
+}

@@ -60,3 +60,19 @@ phone is locked — unlock once, loop auto-resumes.
 - macOS 27.2, single display 1440×900, agent-desktop v2.6, swift/Xcode present.
 - Screen Recording + Accessibility granted to kitty (and screenpipe runs with 7-day media
   retention — see ~/.local/share/iphone-use/ops for the earlier manual ops log).
+
+## Opportunity radar (second component, added 2026-11-14)
+
+The repo now holds two independent things: the iPhone mirror loop (`src/autopilot.py`, above) and
+**机会雷达** (`radar/`, entry `python -m radar` or `python radar.py`), which reads public Ottawa
+opportunities, gates them, drops what is not relevant, scores the rest and prints a Top 10.
+
+- Run: `python -m radar --city ottawa --dry-run` (read-only). Full guide: `RADAR.md`.
+- Sources: Eventbrite, Luma, uOttawa, Carleton (required) + Meetup (bonus, plain HTTP on its
+  JSON-LD, no headless).
+- Layers: gate (can Tony attend?) → relevance high/mid/low (worth his time?) → score (ordering).
+  Low relevance never reaches the Top 10 and is never added to the permanent seen list.
+- State (only without `--dry-run`): `data/` — git-ignored, stays local.
+- Tests: `python -m unittest discover -s tests` (49, offline, no network).
+- Status: adapters, gate, relevance, scoring, digest and the red lines are done and verified
+  against live Ottawa data; pending: Tony's read of the first real digest, and the CTO's follow-ups.

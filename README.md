@@ -21,7 +21,21 @@ terminal-text contamination of screen matching, window drift between capture and
 first-click-focus semantics, silent lock-screen input, and human-takeover dead ends. This project
 is the fixed version: one long-lived process, one state machine, zero human takeover.
 
+## 机会雷达 (opportunity radar) — second component
+
+The repo also holds the **opportunity radar**: it reads public events (Luma, Meetup) for a city,
+normalizes them into one schema, scores them against a profile and prints a daily digest. It needs
+no phone, no login and no API key, and it never signs up or messages anyone.
+
+```bash
+python radar.py --city ottawa --dry-run    # read-only: fetch, score, print
+python -m unittest discover -s tests       # offline tests
+```
+
+Full guide, schema and scoring rubric: [RADAR.md](RADAR.md).
+
 ## Quick start
+
 
 ```bash
 git clone https://github.com/Tooonnnnyyy/mirror-autopilot.git && cd mirror-autopilot

@@ -1,0 +1,10 @@
+# Scraped data stays on this machine (spec red line 9).
+data/*.jsonl
+data/state.json
+data/digests/
+!data/.gitkeep
+
+# Python bytecode
+__pycache__/
+*.pyc
+.DS_Store
